@@ -4,11 +4,13 @@ from pynput.mouse import Button as pButton, Controller
 from pynput.keyboard import Listener, KeyCode
 from tkinter import *
 
+# variables
 delay = 1
 button = pButton.left
 start_stop_key = KeyCode(char=  "s")
 exit_key = KeyCode(char = "e")
 
+#updating  function for delay
 def update_delay():
     try:
         global delay
@@ -18,6 +20,7 @@ def update_delay():
         print("Error")
 
 
+# function to initialize a clicker 
 def start_clicker():
     class ClickMouse(threading.Thread):
         def __init__(self, delay, button):
@@ -65,6 +68,7 @@ def start_clicker():
         listener.join()
 
 
+#framework with key informations and update possibilities
 frame = Tk()
 frame.title("AutoClicker")
 frame.geometry("200x200")
