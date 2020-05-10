@@ -2,25 +2,24 @@ import time
 import threading
 from pynput.mouse import Button as pButton, Controller
 from pynput.keyboard import Listener, KeyCode
+import pyautogui as pg
 from tkinter import *
 
-# variables
+xx, yy = 0, 0
 delay = 1
 button = pButton.left
 start_stop_key = KeyCode(char=  "s")
 exit_key = KeyCode(char = "e")
 
-#updating  function for delay
 def update_delay():
     try:
         global delay
         delay = float(Entry_delay.get())
-        print(delay)
+        # print(delay)
     except ValueError:
         print("Error")
 
 
-# function to initialize a clicker 
 def start_clicker():
     class ClickMouse(threading.Thread):
         def __init__(self, delay, button):
@@ -43,7 +42,12 @@ def start_clicker():
         def run(self):
             while self.program_running:
                 while self.running:
+                    old_position = pg.position()
+                    x_old, y_old = old_position
+                    x, y = position
+                    pg.moveTo(x,y)
                     mouse.click(self.button)
+                    pg.moveTo(x_old, y_old)
                     time.sleep(self.delay)
                 time.sleep(0.1)
 
@@ -58,7 +62,10 @@ def start_clicker():
             if click_thread.running:
                 click_thread.stop_clicking()
             else:
+                global position
+                position = pg.position()
                 click_thread.start_clicking()
+
         elif key == exit_key:
             click_thread.exit()
             listener.stop()
@@ -68,7 +75,7 @@ def start_clicker():
         listener.join()
 
 
-#framework with key informations and update possibilities
+
 frame = Tk()
 frame.title("AutoClicker")
 frame.geometry("200x200")
