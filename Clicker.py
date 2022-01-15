@@ -8,8 +8,9 @@ from tkinter import *
 xx, yy = 0, 0
 delay = 1
 button = pButton.left
-start_stop_key = KeyCode(char=  "s")
-exit_key = KeyCode(char = "e")
+start_stop_key = KeyCode(char="s")
+exit_key = KeyCode(char="e")
+
 
 def update_delay():
     try:
@@ -22,16 +23,15 @@ def update_delay():
 
 def start_clicker():
     class ClickMouse(threading.Thread):
-        def __init__(self, delay, button):
+        def __init__(self, click_delay, mous_button):
             super(ClickMouse, self).__init__()
-            self.delay = delay
-            self.button = button
+            self.delay = click_delay
+            self.button = mous_button
             self.running = False
             self.program_running = True
 
         def start_clicking(self):
             self.running = True
-
         def stop_clicking(self):
             self.running = False
 
@@ -45,17 +45,16 @@ def start_clicker():
                     old_position = pg.position()
                     x_old, y_old = old_position
                     x, y = position
-                    pg.moveTo(x,y)
+                    pg.moveTo(x, y)
                     mouse.click(self.button)
+                    # mouse.click(self.button)
                     pg.moveTo(x_old, y_old)
                     time.sleep(self.delay)
                 time.sleep(0.1)
 
-
     mouse = Controller()
     click_thread = ClickMouse(delay, button)
     click_thread.start()
-
 
     def on_press(key):
         if key == start_stop_key:
@@ -70,10 +69,8 @@ def start_clicker():
             click_thread.exit()
             listener.stop()
 
-
     with Listener(on_press=on_press) as listener:
         listener.join()
-
 
 
 frame = Tk()
@@ -84,12 +81,12 @@ labelSteps = Label(frame, bg="#FFCFC9", text="Update delay in seconds")
 labelSteps.pack()
 Entry_delay = Entry(frame, bg="white")
 Entry_delay.pack()
-button_update = Button(frame, text="update", command = update_delay)
+button_update = Button(frame, text="update", command=update_delay)
 button_update.pack()
 labelStart = Label(frame, bg="#FFCFC9", text="Start-Stop key: s")
 labelStart.pack()
 labelEnd = Label(frame, bg="#FFCFC9", text="Exit key: e")
 labelEnd.pack()
-button_start = Button(frame, text="start", command = start_clicker)
+button_start = Button(frame, text="start", command=start_clicker)
 button_start.pack()
 frame.mainloop()
